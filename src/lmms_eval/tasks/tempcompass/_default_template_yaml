@@ -1,0 +1,22 @@
+dataset_path: lmms-lab/TempCompass
+dataset_kwargs:
+  token: True
+  video: True
+  cache_dir: tempcompass
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: ""
+    post_prompt: {
+    "multi-choice": "\nAnswer with only A, B, C, or D.",
+    "yes_no": "\nPlease answer yes or no:",
+    "caption_matching": "\nAnswer with only A, B, C, or D.",
+    "captioning": ""
+}
+  plm:
+    pre_prompt: ""
+    post_prompt: {
+    "multi-choice": "\nAnswer with only A, B, C, or D.",
+    "yes_no": "\nOnly answer yes or no.",
+    "caption_matching": "\nAnswer with only A, B, C, or D.",
+    "captioning": ""
+}

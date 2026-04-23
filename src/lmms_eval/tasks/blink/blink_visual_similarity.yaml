@@ -1,0 +1,6 @@
+dataset_path: "cache/datasets/BLINK-Benchmark__BLINK/Visual_Similarity"
+dataset_kwargs:
+  load_from_disk: true
+tag: "blink_groups"
+task: "blink_visual_similarity"
+include: _default_template_yaml

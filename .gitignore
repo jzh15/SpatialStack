@@ -1,0 +1,19 @@
+*cpython-310*
+*__pycache__
+*egg-info
+data/
+
+output/
+cache/
+logs/
+env/
+slurm_logs/
+hf_cache/
+
+*.env
+.miniconda3/
+.conda/
+# visualization/
+/models/
+/vsibench/
+sam_hq_vit_h.pth

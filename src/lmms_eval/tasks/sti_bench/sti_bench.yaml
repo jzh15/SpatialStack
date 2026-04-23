@@ -1,0 +1,27 @@
+dataset_path: MINT-SJTU/STI-Bench
+dataset_kwargs:
+  token: True
+  cache_dir: sti_bench
+  video: True
+task: sti_bench
+test_split: test
+output_type: generate_until
+doc_to_visual: !function utils.sti_bench_doc_to_visual
+doc_to_text: !function utils.sti_bench_doc_to_text
+doc_to_target: "Answer"
+generation_kwargs:
+  max_new_tokens: 128
+  temperature: 0
+  top_p: 1.0
+  do_sample: false
+process_results: !function utils.sti_bench_process_results
+metric_list:
+  - metric: sti_bench_accuracy
+    aggregation: !function utils.sti_bench_aggregate_results
+    higher_is_better: true
+lmms_eval_specific_kwargs:
+  default:
+    pre_prompt: "You will receive a short video clip."
+    post_prompt: "Answer with the option letter (A-E) only."
+metadata:
+  - version: 0.0

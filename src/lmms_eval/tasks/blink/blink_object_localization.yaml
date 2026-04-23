@@ -1,0 +1,6 @@
+dataset_path: "cache/datasets/BLINK-Benchmark__BLINK/Object_Localization"
+dataset_kwargs:
+  load_from_disk: true
+tag: "blink_groups"
+task: "blink_object_localization"
+include: _default_template_yaml

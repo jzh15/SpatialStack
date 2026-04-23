@@ -1,0 +1,6 @@
+dataset_path: "cache/datasets/BLINK-Benchmark__BLINK/Multi-view_Reasoning"
+dataset_kwargs:
+  load_from_disk: true
+tag: "blink_groups"
+task: "blink_multi_view_reasoning"
+include: _default_template_yaml

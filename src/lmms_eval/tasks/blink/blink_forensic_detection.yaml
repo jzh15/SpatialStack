@@ -1,0 +1,6 @@
+dataset_path: "cache/datasets/BLINK-Benchmark__BLINK/Forensic_Detection"
+dataset_kwargs:
+  load_from_disk: true
+tag: "blink_groups"
+task: "blink_forensic_detection"
+include: _default_template_yaml
