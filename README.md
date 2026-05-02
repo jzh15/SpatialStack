@@ -245,7 +245,7 @@ If you find this work useful for your research, please consider citing our paper
 ```bibtex
 @article{zhang2026spatialstack,
   title={SpatialStack: Layered Geometry-Language Fusion for 3D VLM Spatial Reasoning},
-  author={Zhang, Jiang and Zhou, Shijie and Liu, Bangya and Kadambi, Achuta and Fan, Zhiwen},
+  author={Jian Zhang and Shijie Zhou and Bangya Liu and Achuta Kadambi and Zhiwen Fan},
   journal={arXiv preprint arXiv:2603.27437},
   year={2026}
 }
