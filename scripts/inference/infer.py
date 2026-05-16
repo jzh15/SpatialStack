@@ -16,7 +16,7 @@ from packaging.version import Version
 import transformers
 from transformers import AutoConfig, AutoProcessor, AutoTokenizer
 
-from qwen_vl.data.utils import load_and_preprocess_images, preprocess_pil_images
+from qwen_vl.data.utils import load_and_preprocess_images
 
 try:
     from qwen_vl_utils import extract_vision_info
@@ -329,19 +329,19 @@ def main():
         chat_template_kwargs["enable_thinking"] = False
     text = processor.apply_chat_template(messages, **chat_template_kwargs)
     if model_family == "qwen3_5":
-        image_inputs = prepare_raw_visual_inputs(messages)
+        raw_image_inputs = prepare_raw_visual_inputs(messages)
         geometry_encoder_inputs = None
-        if use_geometry_model:
-            image_inputs = preprocess_pil_images(image_inputs, mode="crop", target_size=518)
         model_inputs = processor(
             text=text,
-            images=image_inputs,
+            images=raw_image_inputs,
             videos=None,
             padding=True,
             return_tensors="pt",
         )
         if use_geometry_model:
-            geometry_encoder_inputs = [torch.stack(build_qwen3_5_geometry_inputs(image_inputs, model_inputs["image_grid_thw"]))]
+            geometry_encoder_inputs = [
+                torch.stack(build_qwen3_5_geometry_inputs(raw_image_inputs, model_inputs["image_grid_thw"]))
+            ]
     else:
         image_inputs, geometry_encoder_inputs = prepare_visual_inputs(messages, processor)
         model_inputs = processor(
