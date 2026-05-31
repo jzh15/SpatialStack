@@ -206,19 +206,38 @@ Outputs: `*_results.json` (aggregated metrics), `*_samples_<task>.jsonl` (per-sa
 
 See [TRAINING.md](./TRAINING.md) for the full training workflow, including data preparation and launch settings.
 
-Quick start:
+### SpatialStack geometry training
+
+The released `Journey9ni/SpatialStack-Qwen3.5-4B` checkpoint is geometry-enabled:
+it uses VGGT-1B with geometry layers `[11, 17, 23]` fused into language layers
+`[0, 1, 2]`.
+
+Train SpatialStack from the `Qwen/Qwen3.5-4B` base model with geometry enabled:
 
 ```bash
 MODEL_PATH=Qwen/Qwen3.5-4B \
-USE_GEOMETRY_ENCODER=False \
+USE_GEOMETRY_ENCODER=True \
+GEOMETRY_ENCODER_PATH=facebook/VGGT-1B \
+FEATURE_FUSION_METHOD=deepstack_language_add \
+GEOMETRY_ENCODER_LAYERS="11 17 23" \
+GEOMETRY_FUSION_LAYERS="0 1 2" \
 DATA_FLATTEN=False \
-OUTPUT_DIR=./output/qwen35_stock_train \
+OUTPUT_DIR=./output/spatialstack_qwen35_train \
 bash scripts/train/train.sh
 ```
 
-For multi-node Slurm runs (8 nodes x 8 H200 GPUs):
+For multi-node Slurm runs (8 nodes x 8 H200 GPUs), override the same geometry
+settings when submitting the reference script:
 
 ```bash
+MODEL_PATH=/path/to/local/qwen35_snapshot \
+USE_GEOMETRY_ENCODER=True \
+GEOMETRY_ENCODER_PATH=facebook/VGGT-1B \
+FEATURE_FUSION_METHOD=deepstack_language_add \
+GEOMETRY_ENCODER_LAYERS="11 17 23" \
+GEOMETRY_FUSION_LAYERS="0 1 2" \
+DATA_FLATTEN=False \
+OUTPUT_DIR=./output/spatialstack_qwen35_train \
 sbatch scripts/train/slurm/run_qwen35_64gpu_vision.sbatch
 ```
 

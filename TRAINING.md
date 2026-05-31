@@ -1,8 +1,19 @@
 # Training
 
-This guide covers the Qwen3.5 training workflow used by `scripts/train/train.sh`.
+This guide covers the Qwen3.5 training entry point used by
+`scripts/train/train.sh`.
 Run all commands below from the repository root after completing environment
 setup in `README.md`.
+
+The documented Qwen3.5 recipe trains SpatialStack from `Qwen/Qwen3.5-4B` with
+the geometry encoder enabled. Its geometry settings match the released
+`Journey9ni/SpatialStack-Qwen3.5-4B` checkpoint:
+
+- `USE_GEOMETRY_ENCODER=True`
+- `GEOMETRY_ENCODER_PATH=facebook/VGGT-1B`
+- `FEATURE_FUSION_METHOD=deepstack_language_add`
+- `GEOMETRY_ENCODER_LAYERS="11 17 23"`
+- `GEOMETRY_FUSION_LAYERS="0 1 2"`
 
 ## Data Preparation
 
@@ -116,13 +127,8 @@ personal scratch and symlink them back into `./data/media/...`.
 
 ## Launch Training
 
-Use the unified training script:
-
-```bash
-bash scripts/train/train.sh
-```
-
-You can either edit `scripts/train/train.sh` directly or override the main parameters with environment variables.
+Launch `scripts/train/train.sh` with explicit environment variables for the
+SpatialStack Qwen3.5 recipe.
 
 Before running, set these parameters in `scripts/train/train.sh` or via env vars:
 
@@ -133,34 +139,41 @@ Before running, set these parameters in `scripts/train/train.sh` or via env vars
   default: `spar_234k%60,llava_hound_64k%60,vlm3r_scannet%60,vsi_appr_order%50`
 - `LR`: learning rate (default: `1e-5`)
 - `TOTAL_BATCH_SIZE`: global batch size used to compute `gradient_accumulation_steps`
-- `USE_GEOMETRY_ENCODER`: keep this `False` for the documented Qwen3.5 workflow
+- `USE_GEOMETRY_ENCODER`: keep this `True` for SpatialStack Qwen3.5 training
 - `DATA_FLATTEN`: keep this `False` for the documented Qwen3.5 workflow
 - `MASTER_ADDR`, `MASTER_PORT`, `NNODES`, `NODE_RANK`, `CUDA_VISIBLE_DEVICES`: distributed launch controls (optional)
 
-### Qwen3.5 training
+### SpatialStack geometry training
 
-The public branch documents only the official Qwen3.5 base-model training path.
-
-Use the Python 3.12 Qwen3.5 environment from [README.md](./README.md), then launch:
+Use the Python 3.12 Qwen3.5 environment from [README.md](./README.md), then
+launch:
 
 ```bash
 MODEL_PATH=Qwen/Qwen3.5-4B \
-USE_GEOMETRY_ENCODER=False \
+USE_GEOMETRY_ENCODER=True \
+GEOMETRY_ENCODER_PATH=facebook/VGGT-1B \
+FEATURE_FUSION_METHOD=deepstack_language_add \
+GEOMETRY_ENCODER_LAYERS="11 17 23" \
+GEOMETRY_FUSION_LAYERS="0 1 2" \
 DATA_FLATTEN=False \
-OUTPUT_DIR=./output/qwen35_stock_train \
+OUTPUT_DIR=./output/spatialstack_qwen35_train \
 bash scripts/train/train.sh
 ```
 
 Qwen3.5 notes:
 
-- Keep `USE_GEOMETRY_ENCODER=False`; geometry training is not part of the documented public Qwen3.5 workflow.
-- Keep `DATA_FLATTEN=False`; the packed-sequence path is not part of the documented public Qwen3.5 workflow.
-- The saved checkpoint is intended to stay compatible with the existing `infer.py` and `lmms_eval --model qwen3_5` paths in this repository.
-- For multi-node launches, prefer a local model snapshot path over the raw HF id. We observed more reliable startup on large jobs when `MODEL_PATH` points at a pre-downloaded snapshot.
+- Keep `USE_GEOMETRY_ENCODER=True`; this is required for SpatialStack geometry
+  training.
+- Keep `DATA_FLATTEN=False`; the packed-sequence path is not part of the
+  documented public Qwen3.5 workflow.
+- For multi-node launches, prefer a local model snapshot path over the raw HF
+  id. We observed more reliable startup on large jobs when `MODEL_PATH` points
+  at a pre-downloaded snapshot.
 
 #### Example 64-GPU Slurm launch
 
-A reference Slurm batch script is provided for multi-node training (8 nodes × 8 GPUs = 64 GPUs):
+A reference Slurm batch script is provided for multi-node training
+(8 nodes x 8 GPUs = 64 GPUs):
 
 ```bash
 sbatch scripts/train/slurm/run_qwen35_64gpu_vision.sbatch
@@ -170,6 +183,7 @@ Before submission, edit the batch script to set your cluster's partition, accoun
 
 ```bash
 MODEL_PATH=/path/to/local/qwen35_snapshot \
+USE_GEOMETRY_ENCODER=True \
 OUTPUT_DIR=./output/my_run \
 DATASETS=llava_hound_64k%1 \
 TOTAL_BATCH_SIZE=64 \
