@@ -176,7 +176,7 @@ python scripts/inference/infer.py \
 ```bash
 MODEL_PATH=Journey9ni/SpatialStack-Qwen3.5-4B \
 MODEL_IMPL=qwen3_5 \
-MODEL_ARGS_BASE="pretrained=Journey9ni/SpatialStack-Qwen3.5-4B,disable_thinking=true,max_num_frames=32,max_length=12800" \
+MODEL_ARGS_BASE="pretrained=Journey9ni/SpatialStack-Qwen3.5-4B,use_flash_attention_2=true,max_num_frames=32,max_length=12800,geometry_encoder_path=facebook/VGGT-1B,disable_thinking=true" \
 OUTPUT_ROOT=logs/eval/spatialstack_qwen35_4b \
 BENCHMARKS="vsibench" \
 bash scripts/evaluation/eval.sh
@@ -191,6 +191,7 @@ Available benchmarks: `vsibench`, `cvbench`, `blink_spatial`, `sparbench`, `vide
 |---|---|
 | `MODEL_PATH` | HF model id or local checkpoint path |
 | `MODEL_IMPL` | Model implementation (`qwen3_5`, `spatialstack`) |
+| `MODEL_ARGS_BASE` | Comma-separated model arguments passed to lmms-eval |
 | `OUTPUT_ROOT` | Root directory for evaluation outputs |
 | `BENCHMARKS` | Comma-separated benchmark list |
 | `CUDA_VISIBLE_DEVICES` | Select visible GPU ids |
