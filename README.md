@@ -263,7 +263,7 @@ Thanks to the following open-source projects:
 If you find this work useful for your research, please consider citing our paper:
 
 ```bibtex
-@InProceedings{Zhang_2026_CVPR,
+@InProceedings{zhang2026spatialstack,
     author    = {Zhang, Jian and Zhou, Shijie and Liu, Bangya and Kadambi, Achuta and Fan, Zhiwen},
     title     = {SpatialStack: Layered Geometry-Language Fusion for 3D VLM Spatial Reasoning},
     booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
